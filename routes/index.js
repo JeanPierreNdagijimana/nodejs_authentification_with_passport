@@ -9,6 +9,7 @@ router.get("/", (req, res) => res.render("welcome.ejs"));
 router.get("/dashboard", auth.ensureAuthenticated, (req, res) =>
   res.render("dashboard.ejs", {
     name: req.user.name, //req.user is available because of passport)
+    email: req.user.email, //req.user is available because of passport)
   })
 );
 

@@ -2,12 +2,13 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import passport from "passport";
 import flash from "connect-flash";
+import failureFlash from "connect-flash";
 import session from "express-session";
 const userRouter = express.Router();
-// import passport from "passport";
 import LocalStrategy from "passport-local";
 import mongoose from "mongoose";
-// import keys from "../config/keys.js";
+import passportStrategy from "../config/passport.js";
+passportStrategy(passport);
 
 //User model
 import User from "../models/User.js";
@@ -99,9 +100,14 @@ userRouter.post("/login", (req, res, next) => {
 
 //logout handle
 userRouter.get("/logout", (req, res) => {
-  req.logout();
-  req.flash("success_msg", "You are logged out");
-  res.redirect("/users/login");
+  req.logout({}, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      req.flash("success_msg", "You are logged out");
+      res.redirect("/users/login");
+    }
+  });
 });
 
 export default userRouter;
